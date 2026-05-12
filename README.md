@@ -71,3 +71,7 @@ AGPL-3.0. The specification text itself is freely implementable; this license ap
 ## Working interest
 
 This protocol is part of a wider platform-engineering effort to give brands, products, and people first-class standing in the answer-engine era. Related work lives under the same author: [github.com/mizcausevic-dev](https://github.com/mizcausevic-dev).
+
+---
+
+**Connect:** [LinkedIn](https://www.linkedin.com/in/mirzacausevic/) · [Kinetic Gain](https://kineticgain.com) · [Medium](https://medium.com/@mizcausevic/) · [Skills](https://mizcausevic.com/skills/)
