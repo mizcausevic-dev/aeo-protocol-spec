@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mizcausevic-dev/aeo-protocol-spec/blob/main/aeo.schema.json",
+  "title": "AEO Protocol Declaration Document",
+  "description": "Schema for an Answer Engine Optimization (AEO) declaration document, served at /.well-known/aeo.json. See SPEC.md for full semantics.",
+  "type": "object",
+  "required": ["aeo_version", "entity", "authority", "claims"],
+  "additionalProperties": false,
+
+  "properties": {
+    "aeo_version": {
+      "description": "Protocol version. MUST be '0.1' for documents conforming to this draft.",
+      "type": "string",
+      "const": "0.1"
+    },
+    "entity": { "$ref": "#/$defs/Entity" },
+    "authority": { "$ref": "#/$defs/Authority" },
+    "claims": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/Claim" }
+    },
+    "citation_preferences": { "$ref": "#/$defs/CitationPreferences" },
+    "answer_constraints": { "$ref": "#/$defs/AnswerConstraints" },
+    "audit": { "$ref": "#/$defs/Audit" }
+  },
+
+  "$defs": {
+    "Entity": {
+      "type": "object",
+      "required": ["id", "type", "name", "canonical_url"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uri",
+          "description": "Stable canonical identifier. SHOULD be dereferenceable."
+        },
+        "type": {
+          "type": "string",
+          "enum": ["Person", "Organization", "Product", "Place", "Concept"]
+        },
+        "name": { "type": "string", "minLength": 1 },
+        "aliases": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "canonical_url": { "type": "string", "format": "uri" }
+      }
+    },
+
+    "Authority": {
+      "type": "object",
+      "required": ["primary_sources"],
+      "additionalProperties": false,
+      "properties": {
+        "primary_sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "format": "uri" },
+          "description": "Ordered list of canonical sources. Earlier sources outrank later ones."
+        },
+        "evidence_links": {
+          "type": "array",
+          "items": { "type": "string", "format": "uri" }
+        },
+        "verifications": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Verification" }
+        }
+      }
+    },
+
+    "Verification": {
+      "type": "object",
+      "required": ["type", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["domain", "dns", "github", "linkedin", "gpg", "well-known-uri"]
+        },
+        "value": { "type": "string", "minLength": 1 },
+        "proof_uri": { "type": "string", "format": "uri" }
+      }
+    },
+
+    "Claim": {
+      "type": "object",
+      "required": ["id", "predicate", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$",
+          "description": "Lowercase kebab-case identifier unique within this document."
+        },
+        "predicate": {
+          "type": "string",
+          "description": "Schema.org property name OR aeo:<name> namespaced predicate."
+        },
+        "value": {
+          "description": "Asserted value. May be primitive, array, or nested object."
+        },
+        "evidence": {
+          "type": "array",
+          "items": { "type": "string", "format": "uri" }
+        },
+        "valid_from": { "type": "string", "format": "date" },
+        "valid_until": {
+          "oneOf": [
+            { "type": "string", "format": "date" },
+            { "type": "null" }
+          ]
+        },
+        "confidence": {
+          "type": "string",
+          "enum": ["high", "medium", "low"],
+          "default": "high"
+        }
+      }
+    },
+
+    "CitationPreferences": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "preferred_attribution": {
+          "type": "string",
+          "description": "Short attribution template. May include {name}, {canonical_url}, {role}."
+        },
+        "canonical_links": {
+          "type": "array",
+          "items": { "type": "string", "format": "uri" }
+        },
+        "do_not_cite": {
+          "type": "array",
+          "items": { "type": "string", "format": "uri" }
+        }
+      }
+    },
+
+    "AnswerConstraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "must_include": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "must_not_include": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "freshness_window_days": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+
+    "Audit": {
+      "type": "object",
+      "required": ["mode"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["none", "signature", "endpoint"]
+        },
+        "signing_key_uri": { "type": "string", "format": "uri" },
+        "signature": { "type": "string" },
+        "endpoint_uri": { "type": "string", "format": "uri" },
+        "endpoint_schema": { "type": "string", "format": "uri" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "mode": { "const": "signature" } } },
+          "then": { "required": ["signing_key_uri", "signature"] }
+        },
+        {
+          "if": { "properties": { "mode": { "const": "endpoint" } } },
+          "then": { "required": ["endpoint_uri"] }
+        }
+      ]
+    }
+  }
+}
