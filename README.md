@@ -2,6 +2,10 @@
 
 A draft specification for making entity declarations **machine-readable, discoverable, and auditable** by answer engines.
 
+![AEO Visualizer — Explore view](docs/screenshots/01-explore.png)
+
+> Above: the [AEO Protocol Visualizer](https://ai.studio/apps/27c8e83e-765f-4221-8238-a61df1f3e233) rendering the reference Person declaration at [mizcausevic-dev.github.io/.well-known/aeo.json](https://mizcausevic-dev.github.io/.well-known/aeo.json) — entity card, primary sources, verifications, and six authoritative claims.
+
 The SEO era assumed humans typed queries into a search box and clicked blue links. The answer-engine era assumes an LLM composes a synthesized response in which a brand, person, product, or place may be cited, paraphrased, or omitted. AEO is the layer that lets an entity declare *what is authoritative about it*, *where to find that declaration*, and *how to verify it was used correctly*.
 
 This repo is the v0.1 draft of the protocol, the JSON Schema that validates a conforming document, and three reference examples.
@@ -13,6 +17,8 @@ This repo is the v0.1 draft of the protocol, the JSON Schema that validates a co
 | **Declare** | One JSON document describing the entity, its authoritative claims, and citation preferences | `/.well-known/aeo.json` |
 | **Discover** | A fixed well-known URL so any answer engine can find the declaration without bespoke crawling | Same path on every origin |
 | **Audit** | A signed or queryable surface that lets a publisher verify which claims were cited in a given answer | Optional endpoint in the document |
+
+![AEO Visualizer — Three Pillars](docs/screenshots/02-about.png)
 
 ## Why not just JSON-LD / Schema.org?
 
@@ -38,9 +44,13 @@ AEO is complementary to all three. A publisher should serve `robots.txt`, option
 
 1. Write an `aeo.json` document conforming to [`aeo.schema.json`](aeo.schema.json). Start from one of the [examples](examples/).
 2. Validate it with any JSON Schema 2020-12 validator (e.g. `ajv`, `jsonschema`).
-3. Serve it at `https://your-origin/.well-known/aeo.json` with `Content-Type: application/aeo+json`.
+3. Serve it at `https://your-origin/.well-known/aeo.json`. Use `Content-Type: application/aeo+json` if your host permits MIME override; `application/json` is also conforming.
 4. (Optional, conformance Level 2+) Add a verification record — a DNS TXT entry or signed JWK — referenced from the document.
 5. (Optional, conformance Level 3) Expose an audit endpoint so consumers can post back which claims they cited.
+
+![AEO Visualizer — JSON Editor](docs/screenshots/03-editor.png)
+
+> The visualizer's JSON Editor view: paste any conforming `aeo.json` and see it render as an entity card with claims, authority, and citation preferences. Useful for authoring and debugging declarations before deploying.
 
 ## Files in this repo
 
