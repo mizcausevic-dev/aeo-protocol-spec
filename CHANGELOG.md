@@ -7,9 +7,9 @@ This log is intentionally written as an engineering record rather than a launch 
 ## [1.0.0] - 2026-05-12
 
 ### Released
-- Published \$name\ as a public, portfolio-grade answer-engine visibility system.
+- Published **aeo-protocol-spec** as a public, portfolio-grade answer-engine visibility system.
 - Packaged the current implementation, documentation, validation workflow, and proof surfaces into a repo that could be reviewed by engineering, product, and operating stakeholders.
-- Tightened the repo story around the real-world operating problem: content systems were still optimized for crawl-era SEO while AI answer engines increasingly rewarded structured evidence and entity clarity.
+- Tightened the repo story around the real-world operating problem: answer-engine visibility gaps, weak semantic packaging, and inconsistent structured-data coverage.
 
 ### Why this mattered
 - Existing approaches in SEO crawlers, analytics dashboards, and structured-data validators were useful, but they were good at web hygiene, but weak at modeling the citation and semantic packaging needs of answer engines.
@@ -18,7 +18,7 @@ This log is intentionally written as an engineering record rather than a launch 
 ## [0.1.0] - 2026-02-14
 
 ### Shipped
-- Cut the first coherent internal version of the product shape behind \$name\.
+- Cut the first coherent internal version of the product shape behind **aeo-protocol-spec**.
 - Standardized the core objects, decision surfaces, and operator outputs around the repo's main working problem.
 - Established the first reviewable version of the architecture described as: AEO Protocol v0.1 draft. A well-known JSON document at /.well-known/aeo.json that lets entities declare authoritative claims, citation preferences, and audit hooks for answer engines. Spec + JSON Schema + Person/Organization/Product examples.
 
@@ -55,12 +55,12 @@ This log is intentionally written as an engineering record rather than a launch 
 ## [Idea Origin] - 2022-02-11
 
 ### Observed
-- The initial idea surfaced while looking at how teams were handling content systems were still optimized for crawl-era SEO while AI answer engines increasingly rewarded structured evidence and entity clarity.
+- The initial idea surfaced while looking at how teams were handling answer-engine visibility gaps, weak semantic packaging, and inconsistent structured-data coverage.
 - The recurring pattern was that people could often see fragments of the problem, but not the whole operational story in one place.
 
 ### Insight
 - The missing product was not another point solution. It was a clearer operating layer that made the work legible to growth, search, and content operations teams.
-- That insight became the basis for \$name\.
+- That insight became the basis for **aeo-protocol-spec**.
 
 ## [Background Signals] - 2022-08-09
 
