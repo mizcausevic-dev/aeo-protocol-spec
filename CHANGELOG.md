@@ -12,7 +12,8 @@ This log is intentionally written as an engineering record rather than a launch 
 - Tightened the repo story around the real-world operating problem: answer-engine visibility gaps, weak semantic packaging, and inconsistent structured-data coverage.
 
 ### Why this mattered
-- Existing approaches in SEO crawlers, analytics dashboards, and structured-data validators were useful, but they were good at web hygiene, but weak at modeling the citation and semantic packaging needs of answer engines.
+- Existing approaches in SEO crawlers, analytics dashboards, and structured-data validators were useful for adjacent workflows.
+- They still missed the core need: a way to connect web hygiene with citation readiness, semantic packaging, and answer-engine discoverability.
 - This release made the repo readable as an operational capability rather than a narrow technical demo.
 
 ## [0.1.0] - 2026-02-14
