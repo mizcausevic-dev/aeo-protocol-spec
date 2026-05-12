@@ -60,6 +60,21 @@ AEO is complementary to all three. A publisher should serve `robots.txt`, option
 - [`examples/aeo-organization.json`](examples/aeo-organization.json) — reference document for an Organization entity
 - [`examples/aeo-product.json`](examples/aeo-product.json) — reference document for a Product entity
 
+## Reference implementations
+
+Working, tested, CI-gated implementations of this specification:
+
+| Repo | Stack | What it does |
+|---|---|---|
+| [aeo-sdk-python](https://github.com/mizcausevic-dev/aeo-sdk-python) | Python · pydantic v2 · httpx | Parse, build, validate, fetch. Sync and async. 8 tests. |
+| [aeo-sdk-typescript](https://github.com/mizcausevic-dev/aeo-sdk-typescript) | TypeScript · zod · native fetch | Parse, build, validate, fetch. ESM-only, Node 18+. 10 tests. |
+| [aeo-sdk-rust](https://github.com/mizcausevic-dev/aeo-sdk-rust) | Rust · serde · ureq (optional) | Parse, build, validate, fetch. Strict `deny_unknown_fields`. 7 tests. |
+| [aeo-sdk-go](https://github.com/mizcausevic-dev/aeo-sdk-go) | Go · stdlib only | Parse, build, validate, fetch. Zero non-stdlib deps. 10 tests. |
+| [aeo-cli](https://github.com/mizcausevic-dev/aeo-cli) | Rust · clap | `aeo validate`, `aeo fetch`, `aeo inspect`, `aeo claim`. Colored output. |
+| [aeo-crawler](https://github.com/mizcausevic-dev/aeo-crawler) | Go · stdlib | BFS crawler — follows `primary_sources` to build an AEO declaration graph. Emits JSON Lines. |
+
+All implementations load and validate against the canonical [examples](examples/) in this repository.
+
 ## Status
 
 **v0.1 draft.** Not ratified by any standards body. Authored as an opinionated starting point for the post-search era. Issues and pull requests welcome; substantive proposals should reference the conformance level they affect.
