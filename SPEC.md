@@ -43,7 +43,9 @@ https://<origin>/.well-known/aeo.json
 
 The path `/.well-known/aeo.json` follows [RFC 8615](https://www.rfc-editor.org/rfc/rfc8615) (Well-Known URIs).
 
-The response **MUST** use `Content-Type: application/aeo+json`. The response **SHOULD** be served over HTTPS. The response **SHOULD** include a `Cache-Control` header consistent with the entity's expected update cadence; a `max-age` of `3600` is a reasonable default.
+The response **SHOULD** use `Content-Type: application/aeo+json`. Where the host does not permit MIME-type override (notably most static hosts including GitHub Pages, S3 static websites, and basic Netlify / Cloudflare Pages deployments without a custom `_headers` file), the response **MAY** use `Content-Type: application/json`. Consumers **MUST** accept either media type, and **MUST NOT** reject a document on the basis of `Content-Type` alone if the body is a syntactically valid JSON document conforming to this schema.
+
+The response **SHOULD** be served over HTTPS. The response **SHOULD** include a `Cache-Control` header consistent with the entity's expected update cadence; a `max-age` of `3600` is a reasonable default.
 
 A consumer **MAY** follow a single 301/302 redirect from `/.well-known/aeo.json` to a canonical location on the same origin. A consumer **MUST NOT** follow cross-origin redirects.
 
@@ -174,6 +176,7 @@ Consumers **SHOULD** advertise the highest level they enforce and treat lower-le
 - **Stale claims.** `valid_until` and `freshness_window_days` are advisory. Consumers **SHOULD** re-fetch on every synthesis pass where the entity is material; aggressive caching defeats freshness signals.
 - **Cross-origin claims.** A declaration on origin A **MUST NOT** be treated as authoritative for claims about origin B unless B serves its own declaration that references A as a primary source.
 - **Audit feedback as side channel.** The endpoint mode opens an inbound surface. Implementers **MUST** rate-limit and authenticate audit endpoints; the protocol does not mandate a specific auth scheme but RECOMMENDS HTTP signatures or mutual TLS for production deployments.
+- **Media type pragmatics.** Strict `Content-Type` enforcement is incompatible with widely-used static hosts (GitHub Pages, S3 website endpoints). The specification therefore treats `application/aeo+json` as SHOULD rather than MUST, and requires consumers to accept `application/json` as well. Implementers that need a strong content-type signal MAY put a CDN or reverse proxy in front of their origin to rewrite the header.
 
 ## 7. Relationship to existing standards
 
