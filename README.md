@@ -81,7 +81,7 @@ All implementations load and validate against the canonical [examples](examples/
 
 ## License
 
-AGPL-3.0. The specification text itself is freely implementable; this license applies to the schema and example documents as distributed in this repository.
+MIT-licensed. The specification text, JSON Schema, and example documents in this repository may be freely implemented, extended, redistributed, or incorporated into commercial or non-commercial products with attribution. Reference implementations of this spec (such as [mcp-kinetic-gain](https://github.com/mizcausevic-dev/mcp-kinetic-gain)) are licensed separately under AGPL-3.0.
 
 ## Working interest
 
