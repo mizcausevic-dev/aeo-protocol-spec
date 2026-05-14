@@ -1,0 +1,25 @@
+name: Validate examples
+
+# Validates every JSON document under examples/ against the spec's JSON Schema
+# via kg-validate-action. Each example is dispatched to the matching renderer
+# based on its top-level version field, then ajv-checked against the bundled
+# JSON Schema 2020-12 document.
+#
+# Fails the PR if any example regresses against the schema.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  validate-examples:
+    name: Validate against Kinetic Gain Protocol Suite schemas
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mizcausevic-dev/kg-validate-action@v0.1.0
+        with:
+          files: 'examples/**/*.json'

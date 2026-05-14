@@ -1,5 +1,8 @@
 # AEO Protocol
 
+[![Validate examples](https://github.com/mizcausevic-dev/aeo-protocol-spec/actions/workflows/validate.yml/badge.svg)](https://github.com/mizcausevic-dev/aeo-protocol-spec/actions/workflows/validate.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
 A draft specification for making entity declarations **machine-readable, discoverable, and auditable** by answer engines.
 
 ![AEO Visualizer — Explore view](docs/screenshots/01-explore.png)
