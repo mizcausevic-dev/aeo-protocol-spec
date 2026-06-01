@@ -23,3 +23,9 @@ jobs:
       - uses: mizcausevic-dev/kg-validate-action@v0.1.0
         with:
           files: 'examples/**/*.json'
+
+# Least-privilege: read-only test/CI runs. GITHUB_TOKEN gets no write to
+# anything. The publish/release flows (where they exist) carry their own
+# scoped permissions per-workflow.
+permissions:
+  contents: read
