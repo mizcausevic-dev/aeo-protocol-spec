@@ -19,7 +19,7 @@ jobs:
     name: Validate against Kinetic Gain Protocol Suite schemas
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: mizcausevic-dev/kg-validate-action@v0.1.0
         with:
           files: 'examples/**/*.json'
