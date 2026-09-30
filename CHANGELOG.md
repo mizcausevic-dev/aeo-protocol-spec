@@ -2,17 +2,17 @@
 
 All notable changes to this project are documented here.
 
-## [1.0.0] - 2026-05-12
+## Unreleased draft corrections - 2026-09-29
 
-### Released
-- Released **aeo-protocol-spec** publicly as a reviewable operating system for answer-engine visibility.
-- Packaged the current implementation, documentation, validation flow, and proof surfaces into a repo that can be reviewed by technical and operating stakeholders.
-- Clarified the core problem the project is addressing: weak semantic packaging, inconsistent structured data, and poor answer-system discoverability.
+### Fixed
+- Align the specification's license with the repository's MIT LICENSE.
+- Require HTTPS consistently and clarify same-origin redirect authority.
+- Make the Level 3 audit field requirements structurally consistent with the Level 2 signing requirement.
+- Clarify that Levels 2 and 3 need an interoperable signing and audit profile before verified conformance can be claimed.
 
-### Why this mattered
-- Existing approaches in SEO crawlers, analytics platforms, and schema validators were useful for parts of the workflow.
-- They still left out a review layer that connected technical content hygiene with answer readiness and citation potential.
-- This release made the repo read like an operational capability rather than a narrow technical demo.
+## Documentation refresh - 2026-05-12
+
+- Updated repository positioning and documentation. No 1.0.0 protocol release occurred.
 
 ## [0.1.0] - 2026-02-22
 

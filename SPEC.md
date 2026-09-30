@@ -3,7 +3,7 @@
 **Status:** Draft
 **Version:** 0.1.0
 **Editor:** Miz Causevic
-**License:** AGPL-3.0 (this document); schema and examples in this repository are likewise AGPL-3.0. Implementations are unrestricted.
+**License:** MIT (this document, schema, and examples). See [LICENSE](LICENSE).
 
 The key words **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**, and **MAY** in this document are to be interpreted as described in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119).
 
@@ -45,11 +45,11 @@ The path `/.well-known/aeo.json` follows [RFC 8615](https://www.rfc-editor.org/r
 
 The response **SHOULD** use `Content-Type: application/aeo+json`. Where the host does not permit MIME-type override (notably most static hosts including GitHub Pages, S3 static websites, and basic Netlify / Cloudflare Pages deployments without a custom `_headers` file), the response **MAY** use `Content-Type: application/json`. Consumers **MUST** accept either media type, and **MUST NOT** reject a document on the basis of `Content-Type` alone if the body is a syntactically valid JSON document conforming to this schema.
 
-The response **SHOULD** be served over HTTPS. The response **SHOULD** include a `Cache-Control` header consistent with the entity's expected update cadence; a `max-age` of `3600` is a reasonable default.
+The response **MUST** be served over HTTPS. The response **SHOULD** include a `Cache-Control` header consistent with the entity's expected update cadence; a `max-age` of `3600` is a reasonable default.
 
 A consumer **MAY** follow a single 301/302 redirect from `/.well-known/aeo.json` to a canonical location on the same origin. A consumer **MUST NOT** follow cross-origin redirects.
 
-If the document references claims about subdomains or related origins, those origins **SHOULD** serve their own declaration or a redirect to the canonical one.
+If the document references claims about subdomains or related origins, those origins **SHOULD** serve their own declaration. A cross-origin redirect does not establish authority for the other origin.
 
 ### 3.3 Audit
 
@@ -59,7 +59,7 @@ A declaration **MAY** include an optional `audit` block describing how consumers
 |---|---|---|
 | `none` | No audit surface; declaration is take-it-or-leave-it. | Level 1 |
 | `signature` | The declaration is signed with a JWK referenced from the document; consumers verify integrity and origin. | Level 2 |
-| `endpoint` | The publisher exposes a POST endpoint; consumers post back the claim IDs they cited along with the answer hash. | Level 3 |
+| `endpoint` | The signed declaration also names a POST endpoint; consumers post back the claim IDs they cited along with the answer hash. | Level 3 |
 
 ## 4. Document structure
 
@@ -154,8 +154,8 @@ Conformance Level 2+ adds an `audit` object:
 | Field | Type | Description |
 |---|---|---|
 | `mode` | enum | `none`, `signature`, or `endpoint`. |
-| `signing_key_uri` | URI | (signature mode) Location of the JWK or JWKS used to sign the document. |
-| `signature` | string | (signature mode) Detached JWS over the canonical JSON form of the rest of the document. |
+| `signing_key_uri` | URI | (signature or endpoint mode) Location of the JWK or JWKS used to sign the document. |
+| `signature` | string | (signature or endpoint mode) Detached JWS over the canonical JSON form of the rest of the document. |
 | `endpoint_uri` | URI | (endpoint mode) HTTPS POST endpoint accepting audit reports. |
 | `endpoint_schema` | URI | (endpoint mode) JSON Schema describing the audit report payload. |
 
@@ -165,9 +165,11 @@ Conformance Level 2+ adds an `audit` object:
 |---|---|
 | **Level 1 — Declare** | Document published at `/.well-known/aeo.json`, schema-valid, has at least one claim. |
 | **Level 2 — Verify** | Level 1, plus at least one `authority.verifications` entry **and** `audit.mode` set to `signature` with a valid detached JWS. |
-| **Level 3 — Audit** | Level 2, plus a working `audit.endpoint_uri` returning HTTP 2xx for valid audit reports. |
+| **Level 3 — Audit** | Level 1, plus at least one `authority.verifications` entry, `audit.mode` set to `endpoint` with a valid detached JWS and signing key, and a working `audit.endpoint_uri` returning HTTP 2xx for valid audit reports. |
 
 Consumers **SHOULD** advertise the highest level they enforce and treat lower-level declarations accordingly.
+
+Levels 2 and 3 are design targets in this draft. The signing profile does not yet define JSON canonicalization, permitted JWS algorithms, or key-to-origin binding; the audit profile does not yet define an interoperable report payload and authentication scheme. Schema validation only checks the presence and shape of fields. Publishers and consumers **MUST NOT** claim verified Level 2 or Level 3 conformance from schema validation alone.
 
 ## 6. Security and privacy considerations
 
