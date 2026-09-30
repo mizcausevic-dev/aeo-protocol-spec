@@ -180,7 +180,7 @@
         },
         {
           "if": { "properties": { "mode": { "const": "endpoint" } } },
-          "then": { "required": ["endpoint_uri"] }
+          "then": { "required": ["signing_key_uri", "signature", "endpoint_uri"] }
         }
       ]
     }

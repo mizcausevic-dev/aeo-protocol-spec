@@ -19,7 +19,7 @@ This repo is the v0.1 draft of the protocol, the JSON Schema that validates a co
 |---|---|---|
 | **Declare** | One JSON document describing the entity, its authoritative claims, and citation preferences | `/.well-known/aeo.json` |
 | **Discover** | A fixed well-known URL so any answer engine can find the declaration without bespoke crawling | Same path on every origin |
-| **Audit** | A signed or queryable surface that lets a publisher verify which claims were cited in a given answer | Optional endpoint in the document |
+| **Audit** | A signature verifies declaration integrity; an optional endpoint can receive reports of cited claim IDs | Optional audit block in the document |
 
 ![AEO Visualizer — Three Pillars](docs/screenshots/02-about.png)
 
@@ -37,8 +37,8 @@ AEO is built on top of JSON-LD vocabulary where useful (`schema.org` predicates 
 
 ## Why not llms.txt / ai.txt / robots.txt?
 
-- **`robots.txt`** controls *crawling*. AEO controls *citation and synthesis*.
-- **`llms.txt`** ([answer.ai proposal](https://llmstxt.org/)) tells an LLM *what content to read*. AEO tells it *what to consider authoritative and how to cite it*.
+- **`robots.txt`** signals crawl rules. AEO signals citation and synthesis preferences to consumers that choose to honor them.
+- **`llms.txt`** ([answer.ai proposal](https://llmstxt.org/)) suggests content to read. AEO declares what the publisher considers authoritative and how it prefers to be cited.
 - **`ai.txt`** ([Spawning proposal](https://site.spawning.ai/spawning-ai-txt)) is opt-out signaling for training data. AEO is opt-in declaration for inference-time citation.
 
 AEO is complementary to all three. A publisher should serve `robots.txt`, optionally serve `llms.txt`, and additionally serve `/.well-known/aeo.json` for citation-grade declarations.
@@ -48,8 +48,10 @@ AEO is complementary to all three. A publisher should serve `robots.txt`, option
 1. Write an `aeo.json` document conforming to [`aeo.schema.json`](aeo.schema.json). Start from one of the [examples](examples/).
 2. Validate it with any JSON Schema 2020-12 validator (e.g. `ajv`, `jsonschema`).
 3. Serve it at `https://your-origin/.well-known/aeo.json`. Use `Content-Type: application/aeo+json` if your host permits MIME override; `application/json` is also conforming.
-4. (Optional, conformance Level 2+) Add a verification record — a DNS TXT entry or signed JWK — referenced from the document.
+4. (Optional, conformance Level 2+) Add a verification record and sign the declaration with a detached JWS.
 5. (Optional, conformance Level 3) Expose an audit endpoint so consumers can post back which claims they cited.
+
+To validate this repository's examples against its local schema, run `npm ci --ignore-scripts` and `npm test` with Node.js 20 or newer. The test also checks that an unsigned audit endpoint is rejected; it does not verify cryptographic signatures.
 
 ![AEO Visualizer — JSON Editor](docs/screenshots/03-editor.png)
 
@@ -65,22 +67,22 @@ AEO is complementary to all three. A publisher should serve `robots.txt`, option
 
 ## Reference implementations
 
-Working, tested, CI-gated implementations of this specification:
+Companion implementations of this draft. Check each repository for its current tests and release status:
 
 | Repo | Stack | What it does |
 |---|---|---|
-| [aeo-sdk-python](https://github.com/mizcausevic-dev/aeo-sdk-python) | Python · pydantic v2 · httpx | Parse, build, validate, fetch. Sync and async. 8 tests. |
-| [aeo-sdk-typescript](https://github.com/mizcausevic-dev/aeo-sdk-typescript) | TypeScript · zod · native fetch | Parse, build, validate, fetch. ESM-only, Node 18+. 10 tests. |
-| [aeo-sdk-rust](https://github.com/mizcausevic-dev/aeo-sdk-rust) | Rust · serde · ureq (optional) | Parse, build, validate, fetch. Strict `deny_unknown_fields`. 7 tests. |
-| [aeo-sdk-go](https://github.com/mizcausevic-dev/aeo-sdk-go) | Go · stdlib only | Parse, build, validate, fetch. Zero non-stdlib deps. 10 tests. |
+| [aeo-sdk-python](https://github.com/mizcausevic-dev/aeo-sdk-python) | Python · pydantic v2 · httpx | Parse, build, validate, fetch. Sync and async. |
+| [aeo-sdk-typescript](https://github.com/mizcausevic-dev/aeo-sdk-typescript) | TypeScript · zod · native fetch | Parse, build, validate, fetch. ESM-only, Node 18+. |
+| [aeo-sdk-rust](https://github.com/mizcausevic-dev/aeo-sdk-rust) | Rust · serde · ureq (optional) | Parse, build, validate, fetch. Strict `deny_unknown_fields`. |
+| [aeo-sdk-go](https://github.com/mizcausevic-dev/aeo-sdk-go) | Go · stdlib only | Parse, build, validate, fetch. Zero non-stdlib deps. |
 | [aeo-cli](https://github.com/mizcausevic-dev/aeo-cli) | Rust · clap | `aeo validate`, `aeo fetch`, `aeo inspect`, `aeo claim`. Colored output. |
 | [aeo-crawler](https://github.com/mizcausevic-dev/aeo-crawler) | Go · stdlib | BFS crawler — follows `primary_sources` to build an AEO declaration graph. Emits JSON Lines. |
 
-All implementations load and validate against the canonical [examples](examples/) in this repository.
+The [examples](examples/) are the shared reference documents; conformance evidence belongs in each implementation repository.
 
 ## Status
 
-**v0.1 draft.** Not ratified by any standards body. Authored as an opinionated starting point for the post-search era. Issues and pull requests welcome; substantive proposals should reference the conformance level they affect.
+**v0.1 draft.** Level 1 declarations can be schema-validated. Levels 2 and 3 remain design targets because the signing and audit profiles are not yet specified enough for interoperable verification. The protocol is not ratified by any standards body. Publishing a declaration does not establish that an answer engine will discover, honor, or cite it. Issues and pull requests welcome; substantive proposals should reference the conformance level they affect.
 
 ## License
 
