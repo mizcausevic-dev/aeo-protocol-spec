@@ -51,6 +51,8 @@ AEO is complementary to all three. A publisher should serve `robots.txt`, option
 4. (Optional, conformance Level 2+) Add a verification record and sign the declaration with a detached JWS.
 5. (Optional, conformance Level 3) Expose an audit endpoint so consumers can post back which claims they cited.
 
+To validate this repository's examples against its local schema, run `npm ci --ignore-scripts` and `npm test` with Node.js 20 or newer. The test also checks that an unsigned audit endpoint is rejected; it does not verify cryptographic signatures.
+
 ![AEO Visualizer — JSON Editor](docs/screenshots/03-editor.png)
 
 > The visualizer's JSON Editor view: paste any conforming `aeo.json` and see it render as an entity card with claims, authority, and citation preferences. Useful for authoring and debugging declarations before deploying.

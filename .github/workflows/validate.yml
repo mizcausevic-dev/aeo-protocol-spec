@@ -1,11 +1,8 @@
 name: Validate examples
 
-# Validates every JSON document under examples/ against the spec's JSON Schema
-# via kg-validate-action. Each example is dispatched to the matching renderer
-# based on its top-level version field, then ajv-checked against the bundled
-# JSON Schema 2020-12 document.
-#
-# Fails the PR if any example regresses against the schema.
+# Validate examples against this repository's schema first. The pinned action
+# separately checks them against the Kinetic Gain Protocol Suite's bundled
+# schemas; it does not validate edits to aeo.schema.json in this repository.
 
 on:
   push:
@@ -16,10 +13,16 @@ on:
 
 jobs:
   validate-examples:
-    name: Validate against Kinetic Gain Protocol Suite schemas
+    name: Validate local and Protocol Suite schemas
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm test
       - uses: mizcausevic-dev/kg-validate-action@88ec89cd265205cc0a0e58d13d3fa93a5ca18898 # v0.1.0
         with:
           files: 'examples/**/*.json'
